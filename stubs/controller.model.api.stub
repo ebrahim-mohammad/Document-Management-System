@@ -1,0 +1,69 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ namespacedModel }};
+use {{ rootNamespace }}Http\Controllers\Controller;
+use {{ namespacedRequests }};
+use App\Http\Resources\{{ model }}Resource;
+use App\Http\Traits\ApiResponseTrait;
+use App\Http\Traits\UploadFileTrait;
+use Illuminate\Support\Facades\Log;
+
+class {{ class }} extends Controller
+{
+    use ApiResponseTrait, UploadFileTrait;
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        ${{ modelVariable }}s = {{ model }}::all();
+        $data = {{ model }}Resource::collection(${{ modelVariable }}s);
+        return $this->customeResponse($data, 'Done!', 200);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store({{ storeRequest }} $request)
+    {
+        try {
+            //code...
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return $this->customeResponse(null, 'Failed To Create', 500);
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show({{ model }} ${{ modelVariable }})
+    {
+        $data = new {{ model }}Resource(${{ modelVariable }});
+        return $this->customeResponse($data, 'Done!', 200);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update({{ updateRequest }} $request, {{ model }} ${{ modelVariable }})
+    {
+        try {
+            //code...
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return response()->json(['message' => 'Something Error !'], 500);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy({{ model }} ${{ modelVariable }})
+    {
+        ${{ modelVariable }}->delete();
+        return response()->json(['message' => '{{ Model }} Deleted'], 200);
+    }
+}
