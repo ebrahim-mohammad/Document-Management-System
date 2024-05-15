@@ -35,19 +35,14 @@ class UserRegistered extends Mailable
     /**
      * Get the message content definition.
      */
-    // public function content(): Content
-    // {
-    //     return new Content(
-    //         view: 'view.name',
-    //     );
-    // }
-
-    public function build()
+    public function content(): Content
     {
-        return $this->view('emails.user_registered')
-                    ->with([
-                        'userName' => $this->user->name,
-                    ]);
+        return new Content(
+            view: 'emails.user_registered',
+            with: [
+                'userName' => $this->user->name,
+            ]
+        );
     }
 
     /**
