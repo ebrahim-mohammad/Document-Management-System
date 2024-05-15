@@ -47,19 +47,10 @@ Route::group([
     Route::delete('/tags/{tag}', [TagController::class, 'destroy']);
 
     //--------------------------- Comment Routes  ---------------------------//
-    //  Route::post('/comment', [CommentController::class, 'store']);
 
     Route::post('/documents/{documentId}/comments', [CommentController::class, 'store']);
-
-
-
     Route::get('/comments/{comment}', [CommentController::class, 'show']);
     Route::put('/comments/{comment}', [CommentController::class, 'update']);
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy']);
 });
 
-
-
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
