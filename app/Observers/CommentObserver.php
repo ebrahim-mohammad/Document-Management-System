@@ -13,10 +13,10 @@ class CommentObserver
      */
     public function created(Comment $comment): void
     {
-       
-        // Log::info('Comment Created: ', ['comment' => $comment]);
 
-        $comment->user->notify('Comment Created: ', ['comment' => $comment]);
+        Log::info('Comment Created: ', ['comment' => $comment]);
+
+        // $comment->user->notify('Comment Created: ', ['comment' => $comment]);
 
     }
 
@@ -27,9 +27,9 @@ class CommentObserver
     {
 
 
-        $comment->user->notify('Comment Updated: ', ['comment' => $comment]);
+        // $comment->user->notify('Comment Updated: ', ['comment' => $comment]);
 
-        // Log::info('Comment Updated: ', ['comment' => $comment]);
+        Log::info('Comment Updated: ', ['comment' => $comment]);
     }
 
     /**
@@ -39,9 +39,9 @@ class CommentObserver
     {
 
 
-        $comment->user->notify('Comment Deleted: ', ['comment' => $comment]);
+        // $comment->user->notify('Comment Deleted: ', ['comment' => $comment]);
 
-        // Log::info('Comment Deleted: ', ['comment' => $comment]);
+        Log::info('Comment Deleted: ', ['comment' => $comment]);
     }
 
     /**

@@ -12,9 +12,9 @@ class DocumentObserver
      */
     public function created(Document $document): void
     {
-        // Log::info('Document Created: ', ['document' => $document]);
+        Log::info('Document Created: ', ['document' => $document]);
 
-        $document->user->notify('Document Created: ', ['document' => $document]);
+        // $document->user->notify('Document Created: ', ['document' => $document]);
 
 
     }

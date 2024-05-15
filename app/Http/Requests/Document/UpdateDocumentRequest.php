@@ -4,6 +4,10 @@ namespace App\Http\Requests\Document;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\ValidationException;
+
 class UpdateDocumentRequest extends FormRequest
 {
     /**
@@ -19,13 +23,28 @@ class UpdateDocumentRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+
     public function rules(): array
     {
         return [
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'file_path' => 'required|file',
+            'file_path' => 'required|file|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,csv|max:2048',
             'user_id' => 'required|exists:users,id',
         ];
+    }
+
+    /**
+     * Handle a failed validation attempt.
+     *
+     * @param  \Illuminate\Contracts\Validation\Validator  $validator
+     * @return void
+     *
+     * @throws \Illuminate\Http\Exceptions\HttpResponseException
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        $errors = (new ValidationException($validator))->errors();
+        throw new HttpResponseException(response()->json(['errors' => $errors], 422));
     }
 }

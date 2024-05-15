@@ -3,6 +3,7 @@
 namespace App\Http\Traits;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -25,39 +26,42 @@ trait UploadFileTrait
      */
     public function uploadFile(Request $request, $folderName, $fileName)
     {
-        // Validate the request input
         $validator = Validator::make($request->all(), [
             $fileName => 'required|file|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,csv|max:2048',
         ]);
 
-        // If the validation fails, return a JSON response with the errors
-
         if ($validator->fails()) {
+            Log::error('File upload validation failed: ' . $validator->errors());
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        // Get the uploaded file
         $file = $request->file($fileName);
-
-        // Generate a new file name with the current timestamp
-
-        $extension = $file->getClientOriginalExtension();
-        $newFileName = uniqid() . '_' . $file->getClientOriginalName();
+        $extension = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
+        $newFileName = time() . '.' . $extension;
         $filePath = $folderName . '/' . $newFileName;
 
-        // If the file is valid, store it using the Storage facade
+        $file = $request->file($fileName);
+        $extension = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
+        $newFileName = time() . '.' . $extension;
+        $filePath = $folderName . '/' . $newFileName;
 
-        if ($file->isValid()) {
-            $uploaded = Storage::put($filePath, file_get_contents($file));
+        try {
+            if ($file->isValid()) {
+                $uploaded = Storage::put($filePath, file_get_contents($file));
 
-        // If the file was successfully uploaded, return the public URL of the file
-
-            if ($uploaded) {
-                return Storage::url($filePath);
+                if ($uploaded) {
+                    return Storage::url($filePath);
+                } else {
+                    Log::error('Failed to upload file: ' . $filePath);
+                    throw new \Exception('Failed to upload file');
+                }
+            } else {
+                Log::error('Invalid file: ' . $file->getClientOriginalName());
+                throw new \Exception('Invalid file');
             }
+        } catch (\Exception $e) {
+            Log::error('File upload error: ' . $e->getMessage());
+            return null;
         }
-
-        // If the file could not be uploaded, return null
-        return null;
     }
 }

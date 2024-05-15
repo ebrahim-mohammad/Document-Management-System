@@ -37,10 +37,5 @@ class Document extends Model
         return $this->morphMany(Comment::class, 'commentable');
     }
 
-    protected static function booted()
-    {
-        static::creating(function ($document) {
-            $document->observer(new DocumentObserver);
-        });
-    }
+   
 }

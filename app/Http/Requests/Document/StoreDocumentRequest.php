@@ -23,15 +23,6 @@ class StoreDocumentRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    // public function rules(): array
-    // {
-    //     return [
-    //         'title' => 'required|string|max:255',
-    //         'description' => 'required|string',
-    //         'file_path' => 'required|file',
-    //         'user_id' => 'required|exists:users,id',
-    //     ];
-    // }
     public function rules(): array
     {
         return [

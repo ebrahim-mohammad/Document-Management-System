@@ -40,6 +40,9 @@ class DocumentController extends Controller
             $filePath = null;
             if ($request->hasFile('file_path')) {
                 $filePath = $this->uploadFile($request, 'documents', 'file_path');
+                if (!$filePath) {
+                return $this->customeRespone(null, 'Failed to upload file', 422);
+            }
             }
             $document = Document::create([
                 'title' => $request->title,
@@ -47,8 +50,6 @@ class DocumentController extends Controller
                 'file_path' => $filePath,
                 'user_id' => $request->user_id,
             ]);
-
-
             $document->tags()->attach($request->tags);
             DB::commit();
 
@@ -113,7 +114,7 @@ class DocumentController extends Controller
 
         Cache::forget('documents');
         Cache::put('documents', Document::all(), 600);
-        
+
         return $this->customeRespone(null, 'Document Deleted Successfully', 200);
     }
 }
