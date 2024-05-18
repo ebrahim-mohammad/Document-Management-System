@@ -25,7 +25,6 @@ class DocumentController extends Controller
         $documents = Cache::remember('documents', 600, function () {
             return Document::all();
         });
-        // $documents = Document::all();
         $data = DocumentResource::collection($documents);
         return $this->customeRespone($data, 'Done!', 200);
     }
@@ -54,6 +53,7 @@ class DocumentController extends Controller
             DB::commit();
 
             ProcessDocument::dispatch($document);
+
 
             Cache::forget('documents');
             Cache::put('documents', Document::all(), 600);
