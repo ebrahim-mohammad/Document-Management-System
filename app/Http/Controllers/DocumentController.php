@@ -9,7 +9,7 @@ use Illuminate\Http\Request;;
 use App\Http\Resources\DocumentResource;
 use App\Http\Traits\ApiResponseTrait;
 use App\Http\Traits\UploadFileTrait;
-use App\Http\Traits\UploadPhotoTrait;
+use App\Jobs\ProcessDocument;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -52,6 +52,8 @@ class DocumentController extends Controller
             ]);
             $document->tags()->attach($request->tags);
             DB::commit();
+
+            ProcessDocument::dispatch($document);
 
             Cache::forget('documents');
             Cache::put('documents', Document::all(), 600);
